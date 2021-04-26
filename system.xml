@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="fme" translate="label" sortOrder="10">
+			<label>FME Extensions</label>
+		</tab>
+		<section id="convertguesttocustomer" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Guest To Customer</label>
+            <tab>fme</tab>
+            <resource>FME_GuestToCustomer::guesttocustomer_config</resource>
+            <group id="general" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enable" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable Guest To Customer Conversion</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>required-entry</validate>
+                    <comment>
+                        Select Yes/No to enable/disable extension.
+                    </comment>
+                </field>
+            <field id="auto_convert" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Auto convert guest to customer</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment>
+                    Automatically convert guest to customer on checkout.
+                </comment>
+            </field>
+            <field id="group" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Customer Group</label>
+                <source_model>FME\GuestToCustomer\Model\Config\CustomerGroup</source_model>
+            </field>
+            <field id="import" translate="label" type="select" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Import Guests</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment>
+                    Import guests and convert them to customers.
+                </comment>
+            </field>
+            </group>
+            <!-- <group id="merge" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Merge Customer Details</label>
+                <comment>Copy customer attributes to order (if customer already exists)</comment>
+                <field id="group" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Group</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Name</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="dob" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Date Of Birth</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="gender" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Gender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="taxvat" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tax VAT</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group> -->
+		</section>
+	</system>
+</config>

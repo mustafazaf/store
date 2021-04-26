@@ -1,0 +1,159 @@
+<div class="form_parent">
+  <div class="admin__field field field-attachment">
+   <label class="label admin__field-label"><span>Attachment</span></label>
+   <div class="admin__field-control control">
+    <button type="button" class="scalable action-show-hide" id="uploadAttachment"><span><span><span>Upload</span></span></span></button>
+    <button type="button" id="importAttachment" class="save primary">Import Guests</button>
+    <input type="file" id="attachment" name="attachment" style="display: none;"/>
+    <input type="text" id="form_key" name="form_key" value="<?php echo $block->getFormKey() ?>"  style="display: none;" />
+   </div>
+  </div>
+</div>
+<div id="attachmentFiles"></div>
+<!-- <div id="loadingurlrewrites" style="margin-bottom: 10px;"></div> -->
+<!-- <div id="urlrewritesimportinfo" style="margin-bottom: 10px;"></div> -->
+<!-- <div id="attachmentErrorsUrlReWrite"></div> -->
+<div id="success_info_urlrewrite"></div>
+
+<?php
+    $fileHeading = '';
+    $urlImport =$block->getUrl("grid/import/import?isAjax=true");
+    $urlUpload =$block->getUrl("grid/import/fileimport?isAjax=true&file=upload");
+    $fileCollection = null;
+?>
+
+<script>
+require(['jquery',
+    'Magento_Ui/js/modal/alert'
+    ], function ($,alert) {
+        $(document).ready(function ($) {
+            var fileData;
+            <?php $i=0;?>
+ // for Upload File Data button .............  
+            $('#uploadAttachment').click(function(){
+            $('#attachment').trigger('click'); });
+            $("#attachment").change(function(){
+
+            var data = new FormData();
+            jQuery.each($('#attachment')[0].files, function(i, file) {
+            data.append('attachment', file);
+            });
+            data.append('form_key',$('#form_key').val());
+
+            jQuery.ajax({
+                url: "<?php echo $urlUpload ?>",
+                type: "POST",
+                data: data,
+                processData: false,
+                contentType: false,
+                showLoader: true,
+                success: function (response) {
+                        alert({
+                        title: 'Guests Import',
+                        content: response.message,
+                        actions: {
+                            always: function(){}
+                        }
+                });
+                $("#attachmentFiles").html('');
+                $("#attachmentFiles").append("");
+                $("#attachmentFiles").append(response.data.html);
+
+                if (typeof response.fileData === 'undefined' || response.fileData === ''){
+                }else{
+                    fileData = jQuery.parseJSON(response.fileData);
+                }
+                },
+                error: function (response) {
+                    alert({
+                    title: 'Guests Import',
+                    content: response.message,
+                    actions: {
+                        always: function(){}
+                    }
+                    });
+                }
+            });
+        });
+// for Import File Data button .............
+        $('#importAttachment').click(function(){
+        // var flag=0;
+        var message='';
+        // var im =0;
+        // var importcount = 0;
+        // var temp =0;
+        var count =0;
+        if (typeof fileData === 'undefined') {
+            <?php if ($fileCollection!=null) { ?>
+                fileData = <?php echo $fileCollection; ?>;
+            <?php } else { ?>
+            fileData = null;
+            <?php } ?>
+            $("#hide").remove('');
+        }
+        var fileLength = Object.keys(fileData).length-1; 
+        $.each(fileData, function (index, value) {
+        var data = new FormData();
+
+        data.append('form_key',$('#form_key').val());
+        if(index == 0){
+        count = count+1;
+        }
+        else{
+        if (count == 1) {
+            var file0 =  fileData[0];  
+            data.append('file_data0', file0); 
+            }
+        var file1 = fileData[index];
+            data.append('file_data1', file1);
+            data.append('index', index);
+                  
+        jQuery.ajax({
+            url: "<?php echo $urlImport ?>",
+            type: "POST",
+            data: data,
+            processData: false,
+            contentType: false,
+            showLoader: true,
+            cache: false,
+            success: function (response) {
+            if ((response.message) != ''){
+                if(response.message == "Guest not Converted.") {
+                    var a = index+1;
+                    var html44 = '<div style="color:#D8000C;background-color:#FFD2D2; border-radius:5px;"><p>'+a+')' +response.message+'</p></div>';
+                    $("#success_info_urlrewrite").append(html44);
+                }
+                if(response.message == "Guest Converted.") {
+                    var a = index+1;
+                    var html44 = '<div style="color:#4F8A10;background-color:#DFF2BF; border-radius:5px;"><p>'+a+')' +response.message+'</p></div>';
+                    $("#success_info_urlrewrite").append(html44);
+                }
+            }
+            if (count == fileLength) {
+                var text =   'Total records imported #' + fileLength + '<br>';
+                alert({
+                    title: 'Guests Import',
+                    content: text,
+                    actions: {
+                        always: function(){}
+                    }
+                });
+            }
+            count=count+1;
+            },
+            error: function (response) {
+                alert({
+                title: 'Guests Import',
+                content: response.message,
+                actions: {
+                    always: function(){}
+                }
+                });
+            }
+            });
+            }
+            });
+        });
+    });
+});
+</script>
